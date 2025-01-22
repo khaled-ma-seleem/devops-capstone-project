@@ -70,3 +70,15 @@ db: ## Run PostgreSQL in Docker
 		-e POSTGRES_PASSWORD=postgres \
 		-v postgresql:/var/lib/postgresql/data \
 		postgres:alpine
+
+accounts-build: ## Build the accounts application Docker image
+	$(info Building the accounts application Docker image...)
+	docker build -t accounts .
+
+accounts-test: ## Launch the accounts application in a temporary container
+	$(info Starting the accounts application in a temporary Docker container...)
+	docker run --rm \
+		--link postgresql \
+		-p 8080:8080 \
+		-e DATABASE_URI=postgresql://postgres:postgres@postgresql:5432/postgres \
+		accounts
